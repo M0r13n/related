@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from decimal import Decimal
-from future.moves.urllib.parse import ParseResult
-from attr import attrib, NOTHING
 from collections import OrderedDict
-from uuid import uuid4, UUID
 from datetime import date, datetime, time
+from decimal import Decimal
+from uuid import uuid4, UUID
+
+from attr import attrib, NOTHING
+from future.moves.urllib.parse import ParseResult
 from six import string_types
 
 from . import _init_fields, types, converters, validators
@@ -203,7 +204,7 @@ def RegexField(regex, default=NOTHING, required=True, repr=True, cmp=True,
 
 
 def SequenceField(cls, default=NOTHING, required=True, repr=False, key=None,
-                  kw_only: bool = False):
+                  kw_only: bool = False, convert_scalar: bool = False):
     """
     Create new sequence field on a model.
 
@@ -215,16 +216,17 @@ def SequenceField(cls, default=NOTHING, required=True, repr=False, key=None,
     :param string key: override name of the value when converted to dict.
     :param bool kw_only: have a generated __init__ with keyword-only arguments,
         relaxing the required ordering of default and non-default valued attributes.
+    :param bool convert_scalar: Wrap scalars into a list before converting them.
     """
     default = _init_fields.init_default(required, default, [])
-    converter = converters.to_sequence_field(cls)
+    converter = converters.to_sequence_field(cls, convert_scalar)
     validator = _init_fields.init_validator(required, types.TypedSequence)
     return attrib(default=default, converter=converter, validator=validator,
                   repr=repr, metadata=dict(key=key), kw_only=kw_only)
 
 
 def SetField(cls, default=NOTHING, required=True, repr=False, key=None,
-             kw_only: bool = False):
+             kw_only: bool = False, convert_scalar: bool = False):
     """
     Create new set field on a model.
 
@@ -236,9 +238,10 @@ def SetField(cls, default=NOTHING, required=True, repr=False, key=None,
     :param string key: override name of the value when converted to dict.
     :param bool kw_only: have a generated __init__ with keyword-only arguments,
         relaxing the required ordering of default and non-default valued attributes.
+    :param bool convert_scalar: Wrap scalars into a list before converting them.
     """
     default = _init_fields.init_default(required, default, set())
-    converter = converters.to_set_field(cls)
+    converter = converters.to_set_field(cls, convert_scalar)
     validator = _init_fields.init_validator(required, types.TypedSet)
     return attrib(default=default, converter=converter, validator=validator,
                   repr=repr, metadata=dict(key=key), kw_only=kw_only)
