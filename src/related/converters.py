@@ -1,14 +1,16 @@
+import collections
 from collections import OrderedDict
+from datetime import datetime
+from importlib import import_module
+from inspect import isfunction
 from uuid import UUID
+
+from dateutil import parser
 from future.moves.urllib.parse import urlparse
 from six import string_types, callable
-from datetime import datetime
-from inspect import isfunction
-from dateutil import parser
-from importlib import import_module
 
-from .types import TypedSequence, TypedMapping, TypedSet
 from .functions import to_model
+from .types import TypedSequence, TypedMapping, TypedSet
 
 CHILD_ERROR_MSG = "Failed to convert value ({}) to child object class ({}). " \
                   + "... [Original error message: {}]"
@@ -45,13 +47,21 @@ def to_child_field(cls):
     return ChildConverter(cls)
 
 
-def to_sequence_field(cls):
+def is_sequence(obj):
+    if isinstance(obj, str):
+        return False
+    return isinstance(obj, collections.Sequence)
+
+
+def to_sequence_field(cls, convert_scalar=False):
     """
     Returns a callable instance that will convert a value to a Sequence.
 
     :param cls: Valid class type of the items in the Sequence.
+    :param convert_scalar: Wrap scalars into a list before converting them.
     :return: instance of the SequenceConverter.
     """
+
     class SequenceConverter(object):
 
         def __init__(self, cls):
@@ -62,20 +72,26 @@ def to_sequence_field(cls):
             return resolve_class(self._cls)
 
         def __call__(self, values):
-            values = values or []
+            if not values:
+                values = []
+
+            if not is_sequence(values) and convert_scalar:
+                values = [values, ]
+
             args = [to_model(self.cls, value) for value in values]
             return TypedSequence(cls=self.cls, args=args)
 
     return SequenceConverter(cls)
 
 
-def to_set_field(cls):
+def to_set_field(cls, convert_scalar):
     """
     Returns a callable instance that will convert a value to a Sequence.
 
     :param cls: Valid class type of the items in the Sequence.
     :return: instance of the SequenceConverter.
     """
+
     class SetConverter(object):
 
         def __init__(self, cls):
@@ -86,7 +102,12 @@ def to_set_field(cls):
             return resolve_class(self._cls)
 
         def __call__(self, values):
-            values = values or set()
+            if not values:
+                values = set()
+
+            if not is_sequence(values) and convert_scalar:
+                values = [values, ]
+
             args = {to_model(self.cls, value) for value in values}
             return TypedSet(cls=self.cls, args=args)
 
@@ -101,6 +122,7 @@ def to_mapping_field(cls, key):  # pragma: no mccabe
     :param key: Attribute name of the key value in each item of cls instance.
     :return: instance of the MappingConverter.
     """
+
     class MappingConverter(object):
 
         def __init__(self, cls, key):
@@ -139,7 +161,7 @@ def str_if_not_none(value):
     :param value: None or a value that can be converted to a str.
     :return: None or str(value)
     """
-    if not(value is None or isinstance(value, string_types)):
+    if not (value is None or isinstance(value, string_types)):
         value = str(value)
 
     return value
@@ -195,6 +217,7 @@ def to_date_field(formatter):
     :param formatter: String that represents data format for parsing.
     :return: instance of the DateConverter.
     """
+
     class DateConverter(object):
 
         def __init__(self, formatter):
@@ -219,6 +242,7 @@ def to_datetime_field(formatter):
     :param formatter: String that represents data format for parsing.
     :return: instance of the DateTimeConverter.
     """
+
     class DateTimeConverter(object):
 
         def __init__(self, formatter):
@@ -240,6 +264,7 @@ def to_time_field(formatter):
     :param formatter: String that represents data format for parsing.
     :return: instance of the TimeConverter.
     """
+
     class TimeConverter(object):
 
         def __init__(self, formatter):
