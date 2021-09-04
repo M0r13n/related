@@ -13,7 +13,7 @@ with open('dev-requirements.txt') as dev_requirements_file:
     tests_require = [r.strip() for r in dev_requirements_file.readlines()]
 
 setup(
-    name="related",
+    name="related-2",
     version='0.7.2',
     url="https://github.com/M0r13n/related",
 
