@@ -14,7 +14,7 @@ with open('dev-requirements.txt') as dev_requirements_file:
 
 setup(
     name="related-2",
-    version='0.7.2',
+    version='0.7.3',
     url="https://github.com/M0r13n/related",
 
     package_dir={
