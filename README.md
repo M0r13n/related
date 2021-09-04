@@ -1,7 +1,13 @@
 # Related
 
+[![PyPI](https://img.shields.io/pypi/v/related_2)](https://pypi.org/project/related_2/)
+[![license](https://img.shields.io/pypi/l/related_2)](https://github.com/M0r13n/related_2/blob/master/LICENSE)
+[![downloads](https://img.shields.io/pypi/dm/related_2)](https://pypi.org/project/related_2/)
+
+
 | :exclamation:  This is a fork of [related](https://github.com/genomoncology/related), which is apparently abandoned :exclamation:|
 |---------------------------------------------------------------------------------------------------------------------|
+
 
 `Related` is a Python library for creating nested object models
 that can be serialized to and de-serialized from
@@ -25,14 +31,14 @@ Example use cases for `related` object models include:
 
 # Requirements
 
-* Python (2.7, 3.5, 3.6)
+* Python (3.6+)
 
 
 # Installation
 
 Install using `pip`...
 
-    TBD
+    pip install related-2
 
 
 # First Example

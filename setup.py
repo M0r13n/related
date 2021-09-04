@@ -13,8 +13,8 @@ with open('dev-requirements.txt') as dev_requirements_file:
     tests_require = [r.strip() for r in dev_requirements_file.readlines()]
 
 setup(
-    name="related",
-    version='0.7.2',
+    name="related-2",
+    version='0.7.3',
     url="https://github.com/M0r13n/related",
 
     package_dir={
@@ -45,7 +45,8 @@ setup(
 
     keywords='related object models yaml json dict nested',
     description="Related: Straightforward nested object models in Python",
-    long_description="%s\n\n%s" % (readme, history),
+    long_description=f"{readme}\n\n{history}",
+    long_description_content_type="text/markdown",
 
     classifiers=[
         'Intended Audience :: Developers',
