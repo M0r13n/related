@@ -164,6 +164,7 @@ Below are links and descriptions of the tests provided so far.
 | [Example 06]   | Basic JSON (de)serialization with TimeField, DateTimeField and DecimalField.     |
 | [Example 07]   | Function decorator that converts inputs to obj and outputs to dict |
 | [Example 08]   | Handle self-referencing and out-of-order references using strings. |
+| [Example 09]   | A simple, nested mapping example |
 
 
 # Documentation
